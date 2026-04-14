@@ -107,6 +107,24 @@ paths:
         '500':
           description: Internal server error
 
+  /dishes:
+    get:
+      tags:
+        - Dishes
+      summary: Retrieve all dishes
+      operationId: getAllDishes
+      responses:
+        '200':
+          description: List of all dishes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dish'
+        '500':
+          description: Internal server error
+
 components:
   schemas:
     Ingredient:
@@ -147,5 +165,34 @@ components:
           type: string
           description: Unit of measurement for the stock
           example: "KG"
-       
-       
+    IngredientWithStock:
+      allOf:
+        - $ref: '#/components/schemas/Ingredient'
+        - type: object
+          properties:
+            stock:
+              $ref: '#/components/schemas/Stock'
+    Dish:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the dish
+          example: 1
+        name:
+          type: string
+          description: Name of the dish
+          example: "Salaide fraîche"
+        dishType:
+          type: string
+          enum:
+          - STARTER
+          - MAIN
+          - DESSERT
+          description: Type of the dish
+          example: "STARTER"
+        ingredients:
+          type: array
+          description: List of ingredients in the dish
+          items:
+            $ref: '#/components/schemas/IngredientWithStock'
