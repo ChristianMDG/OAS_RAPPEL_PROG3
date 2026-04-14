@@ -60,6 +60,53 @@ paths:
         '500':
           description: Internal server error
 
+  /ingredients/{id}/stock:
+    get:
+      tags:
+        - Ingredients
+      summary: Retrieve the stock of an ingredient at a given date
+      operationId: getIngredientStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identifier of the ingredient
+          schema:
+            type: integer
+            example: 1
+        - name: at
+          in: query
+          required: true
+          description: Date and time for which to retrieve the stock (ISO 8601 format)
+          schema:
+            type: string
+            format: date-time
+            example: "2015-01-07T00:00:00Z"
+        - name: unit
+          in: query
+          required: true
+          description: Unit of measurement for the stock
+          schema:
+            type: string
+            enum:
+              - KG
+              - L
+              - PCS
+            example: KG
+      responses:
+        '200':
+          description: Stock of the ingredient at the specified date
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stock'
+        '400':
+          description: Invalid query parameters
+        '404':
+          description: Ingredient not found
+        '500':
+          description: Internal server error
+
 components:
   schemas:
     Ingredient:
@@ -88,4 +135,17 @@ components:
           - OTHER
           description: Category of the ingredient
           example: "VEGETABLE"
-     
+    Stock:
+      type: object
+      properties:
+        quantity:
+          type: number
+          format: double
+          description: Quantity in stock
+          example: 4.8
+        unit:
+          type: string
+          description: Unit of measurement for the stock
+          example: "KG"
+       
+       
