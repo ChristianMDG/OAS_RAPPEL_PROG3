@@ -16,3 +16,50 @@ tags:
   - name: Dishes
     description: Operations on dishes
 paths:
+  /ingredients:
+    get:
+      tags:
+        - Ingredients
+      summary: Retrieve all ingredients
+      operationId: getAllIngredients
+      responses:
+        '200':
+          description: List of all ingredients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the ingredient
+          example: 1
+        name:
+          type: string
+          description: Name of the ingredient
+          example: "Laitue"
+        price:
+          type: number
+          format: float
+          description: Price per unit of the ingredient
+          example: 800.0
+        category:
+          type: string
+          enum:
+          - VEGETABLE
+          - ANIMAL
+          - MARINE
+          - DAIRY
+          - OTHER
+          description: Category of the ingredient
+          example: "VEGETABLE"
+     
