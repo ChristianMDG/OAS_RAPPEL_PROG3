@@ -124,6 +124,45 @@ paths:
                   $ref: '#/components/schemas/Dish'
         '500':
           description: Internal server error
+  /dishes/{id}/ingredients:
+    put:
+      tags:
+        - Dishes
+      summary: Update the ingredients of a dish
+      operationId: updateDishIngredients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the dish
+          schema:
+            type: integer
+            example: 2
+      requestBody:
+        required: true
+        description: List of ingredients to associate with the dish (by their ID)
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IngredientRef'
+            example:
+              - id: 1
+              - id: 2
+      responses:
+        '200':
+          description: Dish updated with the new ingredients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Dish or ingredient not found
+        '500':
+          description: Internal server error
 
 components:
   schemas:
@@ -165,13 +204,24 @@ components:
           type: string
           description: Unit of measurement for the stock
           example: "KG"
-    IngredientWithStock:
-      allOf:
-        - $ref: '#/components/schemas/Ingredient'
-        - type: object
-          properties:
-            stock:
-              $ref: '#/components/schemas/Stock'
+    # IngredientWithStock:
+    #   allOf:
+    #     - $ref: '#/components/schemas/Ingredient'
+    #     - type: object
+    #       properties:
+    #         stock:
+    #           $ref: '#/components/schemas/Stock'
+
+    IngredientRef:
+      type: object
+      description: Reference to an ingredient by its ID
+      properties:
+        id:
+          type: integer
+          description: Identifier of the ingredient
+          example: 1
+      required:
+        - id
     Dish:
       type: object
       properties:
@@ -195,4 +245,4 @@ components:
           type: array
           description: List of ingredients in the dish
           items:
-            $ref: '#/components/schemas/IngredientWithStock'
+            $ref: '#/components/schemas/Ingredient'
